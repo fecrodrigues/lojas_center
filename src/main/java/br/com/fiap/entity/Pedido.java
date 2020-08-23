@@ -16,34 +16,40 @@ public class Pedido implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private String idPedido;
-	private String idCliente;
+	private long idPedido;
+	private long idCliente;
 	private LocalDateTime dataCompra;
 	
 	public Pedido() {}
 	
-	public Pedido(String idPedido, String idCliente, LocalDateTime dataCompra) {
+	public Pedido(long idPedido, long idCliente, LocalDateTime dataCompra) {
 		this.idPedido = idPedido;
 		this.idCliente = idCliente;
 		this.dataCompra = dataCompra;
 	}
+
 	
 	
-	public String getIdPedido() {
+	public long getIdPedido() {
 		return idPedido;
 	}
-	public void setIdPedido(String idPedido) {
+
+	public void setIdPedido(long idPedido) {
 		this.idPedido = idPedido;
 	}
-	public String getIdCliente() {
+
+	public long getIdCliente() {
 		return idCliente;
 	}
-	public void setIdCliente(String idCliente) {
+
+	public void setIdCliente(long idCliente) {
 		this.idCliente = idCliente;
 	}
+
 	public LocalDateTime getDataCompra() {
 		return dataCompra;
 	}
+
 	public void setDataCompra(LocalDateTime dataCompra) {
 		this.dataCompra = dataCompra;
 	}

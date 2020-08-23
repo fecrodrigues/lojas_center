@@ -1,7 +1,12 @@
 package br.com.fiap.repository;
 
-import org.springframework.data.repository.CrudRepository;
-import br.com.fiap.entity.Produto;
+import java.util.List;
 
-public interface PedidoRepository extends CrudRepository<Produto, Long> {
+import org.springframework.data.repository.CrudRepository;
+
+import br.com.fiap.entity.Pedido;
+
+public interface PedidoRepository extends CrudRepository<Pedido, Long> {
+	
+	public List<Pedido> findByCliente(long idCliente);
 }
