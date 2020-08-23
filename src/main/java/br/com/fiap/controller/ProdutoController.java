@@ -28,7 +28,7 @@ public class ProdutoController {
 		@ApiResponse(code = 200, message = "Retorna o produto encontrado"),
 		@ApiResponse(code = 404, message = "Informa que o produto não foi encotrado")
 	})
-	@GetMapping("consultar/{codigo}")
+	@GetMapping("/{codigo}")
 	public ResponseEntity<Response<Produto>> consultarProduto(@PathVariable("codigo") Long codigo) {
 
 		try {
@@ -45,7 +45,7 @@ public class ProdutoController {
 			@ApiResponse(code = 200, message = "Retorna a lista de produtos encontrado"),
 			@ApiResponse(code = 404, message = "Informa que nenhum produto foi encontrado")
 	})
-	@GetMapping("listar")
+	@GetMapping
 	public ResponseEntity<Response<List<Produto>>> listarProdutos() {
 		List<Produto> lista = produtoService.listarProdutos();
 		if(lista.size() != 0) {
@@ -59,7 +59,7 @@ public class ProdutoController {
 	@ApiResponses( value = {
 			@ApiResponse(code = 201, message = "Informa que o produto foi adicionado")
 	})
-	@PostMapping("adicionar")
+	@PostMapping
 	public ResponseEntity<Response<HttpHeaders>> adicionarProduto(@RequestBody Produto produto, UriComponentsBuilder builder) {
 		Produto savedProduto = produtoService.adicionarProduto(produto);
                 HttpHeaders headers = new HttpHeaders();
@@ -73,7 +73,7 @@ public class ProdutoController {
 			@ApiResponse(code = 404, message = "Informa que o produto não foi encotrado para atualização"),
 			@ApiResponse(code = 400, message = "Código do produto não foi informado")
 	})
-	@PutMapping("atualizar")
+	@PutMapping
 	public ResponseEntity<Response<Produto>> atualizarProduto(@RequestBody Produto produto) {
 		if(produto.codigo != null) {
 			try {
@@ -92,7 +92,7 @@ public class ProdutoController {
 			@ApiResponse(code = 200, message = "Retorna o produto foi excluido"),
 			@ApiResponse(code = 404, message = "Informa que o produto não foi encotrado para exclusão")
 	})
-	@DeleteMapping("excluir/{codigo}")
+	@DeleteMapping("/{codigo}")
 	public ResponseEntity<Response<String>> excluirProduto(@PathVariable("codigo") Long codigo) {
 		try {
 			produtoService.excluirProduto(codigo);
@@ -109,7 +109,7 @@ public class ProdutoController {
 			@ApiResponse(code = 404, message = "Produto não encontrado para dar baixa"),
 			@ApiResponse(code = 400, message = "Produto não possui estoque suficiente para dar baixa")
 	})
-	@PatchMapping("dar-baixa")
+	@PatchMapping("estoque/dar-baixa")
 	public ResponseEntity<Response<Produto>> darBaixaEstoque(@RequestBody ControleEstoqueProduto controleEstoque) {
 		try {
 			Produto produto = produtoService.darBaixaEstoque(controleEstoque.getCodigo(), controleEstoque.getQuantidade());
