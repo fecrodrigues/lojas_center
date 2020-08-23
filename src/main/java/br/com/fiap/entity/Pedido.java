@@ -1,0 +1,51 @@
+package br.com.fiap.entity;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "pedidos")
+public class Pedido implements Serializable{
+	private static final long serialVersionUID = 7950766584876194152L;
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private String idPedido;
+	private String idCliente;
+	private LocalDateTime dataCompra;
+	
+	public Pedido() {}
+	
+	public Pedido(String idPedido, String idCliente, LocalDateTime dataCompra) {
+		this.idPedido = idPedido;
+		this.idCliente = idCliente;
+		this.dataCompra = dataCompra;
+	}
+	
+	
+	public String getIdPedido() {
+		return idPedido;
+	}
+	public void setIdPedido(String idPedido) {
+		this.idPedido = idPedido;
+	}
+	public String getIdCliente() {
+		return idCliente;
+	}
+	public void setIdCliente(String idCliente) {
+		this.idCliente = idCliente;
+	}
+	public LocalDateTime getDataCompra() {
+		return dataCompra;
+	}
+	public void setDataCompra(LocalDateTime dataCompra) {
+		this.dataCompra = dataCompra;
+	}
+	
+}
