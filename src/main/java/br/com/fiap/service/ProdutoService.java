@@ -68,7 +68,7 @@ public class ProdutoService implements IProdutoService {
 
 	@Override	
 	@Caching(
-		evict= { 
+		evict= {
 			@CacheEvict(value= "produtoCache", key= "#codigo"),
 			@CacheEvict(value= "listaProdutosCache", allEntries= true)
 		}
@@ -84,7 +84,11 @@ public class ProdutoService implements IProdutoService {
 	}
 
 	@Override
-	public void darBaixaEstoque(Long codigo, Integer quantidade) throws Exception {
+	@Caching(
+		put = { @CachePut(value="produtoCache", key="#codigo") },
+		evict = { @CacheEvict(value="listaProdutosCache", allEntries = true) }
+	)
+	public Produto darBaixaEstoque(Long codigo, Integer quantidade) throws Exception {
 		try {
 			if(quantidade > 0) {
 				Produto produto = produtoRepository.findById(codigo).get();
@@ -94,6 +98,7 @@ public class ProdutoService implements IProdutoService {
 					throw new Exception("Produto não possui a quantidade desejada no estoque");
 				} else {
 					produtoRepository.save(produto);
+					return produto;
 				}
 			} else {
 				throw new Exception("Quantidade informada é inválida");
@@ -104,7 +109,11 @@ public class ProdutoService implements IProdutoService {
 	}
 
 	@Override
-	public void depositarEstoque(Long codigo, Integer quantidade) throws Exception {
+	@Caching(
+		put = { @CachePut(value="produtoCache", key="#codigo") },
+		evict = { @CacheEvict(value="listaProdutosCache", allEntries = true) }
+	)
+	public Produto depositarEstoque(Long codigo, Integer quantidade) throws Exception {
 		try {
 
 			if(quantidade > 0) {
@@ -112,6 +121,7 @@ public class ProdutoService implements IProdutoService {
 				produto.quantidade += quantidade;
 
 				produtoRepository.save(produto);
+				return produto;
 			} else {
 				throw new Exception("Quantidade informada é inválida");
 			}

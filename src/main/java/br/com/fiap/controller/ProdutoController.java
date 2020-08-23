@@ -110,14 +110,14 @@ public class ProdutoController {
 			@ApiResponse(code = 400, message = "Produto não possui estoque suficiente para dar baixa")
 	})
 	@PatchMapping("dar-baixa")
-	public ResponseEntity<Response<String>> darBaixaEstoque(@RequestBody ControleEstoqueProduto controleEstoque) {
+	public ResponseEntity<Response<Produto>> darBaixaEstoque(@RequestBody ControleEstoqueProduto controleEstoque) {
 		try {
-			produtoService.darBaixaEstoque(controleEstoque.getCodigo(), controleEstoque.getQuantidade());
-			return new ResponseEntity<Response<String>>(new Response<String>("Baixa no estoque realizada com sucesso!", null), HttpStatus.OK);
+			Produto produto = produtoService.darBaixaEstoque(controleEstoque.getCodigo(), controleEstoque.getQuantidade());
+			return new ResponseEntity<Response<Produto>>(new Response<Produto>("Baixa no estoque realizada com sucesso!", produto), HttpStatus.OK);
 		} catch(NoSuchElementException e) {
-			return new ResponseEntity<Response<String>>(new Response<String>(e.getMessage(), null), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Response<Produto>>(new Response<Produto>(e.getMessage(), null), HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
-			return new ResponseEntity<Response<String>>(new Response<String>(e.getMessage(), null), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Response<Produto>>(new Response<Produto>(e.getMessage(), null), HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -128,14 +128,14 @@ public class ProdutoController {
 			@ApiResponse(code = 400, message = "Quantidade informada é inválida")
 	})
 	@PatchMapping("estoque/depositar")
-	public ResponseEntity<Response<String>> depositarEstoque(@RequestBody ControleEstoqueProduto controleEstoque) {
+	public ResponseEntity<Response<Produto>> depositarEstoque(@RequestBody ControleEstoqueProduto controleEstoque) {
 		try {
-			produtoService.depositarEstoque(controleEstoque.getCodigo(), controleEstoque.getQuantidade());
-			return new ResponseEntity<Response<String>>(new Response<String>("Deposito no estoque realizado com sucesso!", null), HttpStatus.OK);
+			Produto produto = produtoService.depositarEstoque(controleEstoque.getCodigo(), controleEstoque.getQuantidade());
+			return new ResponseEntity<Response<Produto>>(new Response<Produto>("Deposito no estoque realizado com sucesso!", produto), HttpStatus.OK);
 		} catch(NoSuchElementException e) {
-			return new ResponseEntity<Response<String>>(new Response<String>(e.getMessage(), null), HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Response<Produto>>(new Response<Produto>(e.getMessage(), null), HttpStatus.NOT_FOUND);
 		} catch (Exception e) {
-			return new ResponseEntity<Response<String>>(new Response<String>(e.getMessage(), null), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Response<Produto>>(new Response<Produto>(e.getMessage(), null), HttpStatus.BAD_REQUEST);
 		}
 	}
 } 

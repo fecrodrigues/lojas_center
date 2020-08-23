@@ -11,6 +11,6 @@ public interface IProdutoService {
      Produto adicionarProduto(Produto produto);
      Produto atualizarProduto(Produto produto) throws NoSuchElementException;
      void excluirProduto(Long id) throws NoSuchElementException;
-     void darBaixaEstoque(Long codigo, Integer quantidade) throws Exception;
-     void depositarEstoque(Long codigo, Integer quantidade) throws Exception;
+     Produto darBaixaEstoque(Long codigo, Integer quantidade) throws Exception;
+     Produto depositarEstoque(Long codigo, Integer quantidade) throws Exception;
 } 
