@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.com.fiap.dto.PedidoForm;
 import br.com.fiap.entity.Pedido;
+import br.com.fiap.model.PedidoForm;
 import br.com.fiap.service.PedidoService;
 
 @RestController

@@ -10,10 +10,10 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.fiap.dto.PedidoForm;
 import br.com.fiap.entity.Pedido;
 import br.com.fiap.exceptions.NotCreatedPedidoException;
 import br.com.fiap.exceptions.NotFoundPedidoException;
+import br.com.fiap.model.PedidoForm;
 import br.com.fiap.repository.PedidoRepository;
 
 @Service
@@ -38,7 +38,7 @@ public class PedidoService {
 	
 	@Cacheable(value = "cacheblePedidoByClient" ,key = "#idCliente" )
 	public List<Pedido> findByCliente(long idCliente){
-		List<Pedido> pedidos = repository.findByCliente(idCliente);
+		List<Pedido> pedidos = repository.findByIdCliente(idCliente);
 		
 		if(pedidos == null || pedidos.isEmpty()) {
 			throw new NotFoundPedidoException(NOT_FOUND_ERROR_MSG_PEDIDO);
