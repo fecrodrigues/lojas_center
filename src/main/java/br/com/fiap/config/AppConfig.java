@@ -11,7 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration 
 @ComponentScan("br.com.fiap") 
-@EnableWebMvc   
+//@EnableWebMvc
 public class AppConfig implements WebMvcConfigurer {  
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
