@@ -22,16 +22,6 @@ public class Pedido implements Serializable{
 	private List<Produto> produtos;
 	private LocalDateTime dataCompra;
 	
-	public Pedido() {}
-	
-	public Pedido(long idPedido, long idCliente, LocalDateTime dataCompra) {
-		this.idPedido = idPedido;
-		this.idCliente = idCliente;
-		this.dataCompra = dataCompra;
-	}
-
-	
-	
 	public long getIdPedido() {
 		return idPedido;
 	}
