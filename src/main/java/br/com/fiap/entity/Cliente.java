@@ -20,13 +20,17 @@ public class Cliente implements Serializable {
     public String nome_mae;
     public String email;
 
-    public Cliente(Long codigo, String nome, Date data_nascimento, String cpf, String nome_mae, String email) {
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
+    public Endereco endereco;
+
+    public Cliente(Long codigo, String nome, Date data_nascimento, String cpf, String nome_mae, String email, Endereco endereco) {
         this.codigo = codigo;
         this.nome = nome;
         this.data_nascimento = data_nascimento;
         this.cpf = cpf;
         this.nome_mae = nome_mae;
         this.email = email;
+        this.endereco = endereco;
     }
 
     public Cliente() {
