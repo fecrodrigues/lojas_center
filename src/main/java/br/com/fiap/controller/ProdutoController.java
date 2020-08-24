@@ -26,7 +26,7 @@ public class ProdutoController {
 	@ApiOperation("Retorna um produto especifico de acordo com o código do produto informado")
 	@ApiResponses( value = {
 		@ApiResponse(code = 200, message = "Retorna o produto encontrado"),
-		@ApiResponse(code = 404, message = "Informa que o produto não foi encotrado")
+		@ApiResponse(code = 404, message = "Informa que o produto não foi encontrado")
 	})
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Response<Produto>> consultarProduto(@PathVariable("codigo") Long codigo) {
@@ -63,14 +63,14 @@ public class ProdutoController {
 	public ResponseEntity<Response<HttpHeaders>> adicionarProduto(@RequestBody Produto produto, UriComponentsBuilder builder) {
 		Produto savedProduto = produtoService.adicionarProduto(produto);
                 HttpHeaders headers = new HttpHeaders();
-                headers.setLocation(builder.path("/produto/consultar/{codigo}").buildAndExpand(savedProduto.codigo).toUri());
+                headers.setLocation(builder.path("/produto/{codigo}").buildAndExpand(savedProduto.codigo).toUri());
                 return new ResponseEntity<Response<HttpHeaders>>(new Response<HttpHeaders>("Produto adicionado", headers), HttpStatus.CREATED);
 	}
 
 	@ApiOperation("Atualizar um produto especifico de acordo com o código do produto informado")
 	@ApiResponses( value = {
-			@ApiResponse(code = 200, message = "Retorna o produto foi atualizado"),
-			@ApiResponse(code = 404, message = "Informa que o produto não foi encotrado para atualização"),
+			@ApiResponse(code = 200, message = "Retorna o produto que foi atualizado"),
+			@ApiResponse(code = 404, message = "Informa que o produto não foi encontrado para atualização"),
 			@ApiResponse(code = 400, message = "Código do produto não foi informado")
 	})
 	@PutMapping
@@ -89,8 +89,8 @@ public class ProdutoController {
 
 	@ApiOperation("Excluir um produto especifico de acordo com o código do produto informado")
 	@ApiResponses( value = {
-			@ApiResponse(code = 200, message = "Retorna o produto foi excluido"),
-			@ApiResponse(code = 404, message = "Informa que o produto não foi encotrado para exclusão")
+			@ApiResponse(code = 200, message = "Retorna o produto que foi excluído"),
+			@ApiResponse(code = 404, message = "Informa que o produto não foi encontrado para exclusão")
 	})
 	@DeleteMapping("/{codigo}")
 	public ResponseEntity<Response<String>> excluirProduto(@PathVariable("codigo") Long codigo) {
