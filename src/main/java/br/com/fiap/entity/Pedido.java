@@ -4,10 +4,17 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -18,32 +25,42 @@ public class Pedido implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long idPedido;
+	
+    @OneToMany(cascade= CascadeType.ALL,fetch= FetchType.LAZY, mappedBy= "pedido")
 	private Cliente cliente;
+	
+	@ManyToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
+	@JoinTable(name= "pedido_produto", joinColumns= 
+	{@JoinColumn(name= "codigo_pedido", nullable= false, updatable= false)},
+	inverseJoinColumns= {@JoinColumn(name= "codigo_produto", nullable= false, updatable= false)})
 	private List<Produto> produtos;
+	
 	private LocalDateTime dataCompra;
+	
 	
 	public long getIdPedido() {
 		return idPedido;
 	}
-
 	public void setIdPedido(long idPedido) {
 		this.idPedido = idPedido;
 	}
-
-	public long getIdCliente() {
-		return idCliente;
+	public Cliente getCliente() {
+		return cliente;
 	}
-
-	public void setIdCliente(long idCliente) {
-		this.idCliente = idCliente;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
-
+	public List<Produto> getProdutos() {
+		return produtos;
+	}
+	public void setProdutos(List<Produto> produtos) {
+		this.produtos = produtos;
+	}
 	public LocalDateTime getDataCompra() {
 		return dataCompra;
 	}
-
 	public void setDataCompra(LocalDateTime dataCompra) {
 		this.dataCompra = dataCompra;
 	}
-	
+
 }
