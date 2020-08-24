@@ -28,7 +28,7 @@ public class PedidoController {
 
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Pedido> findByPedido(@PathVariable("id") long idPedido){
+	public ResponseEntity<Pedido> findByPedido(@PathVariable("id") Long idPedido){
 		return ResponseEntity.ok(service.findByPedido(idPedido));
 	}
 	

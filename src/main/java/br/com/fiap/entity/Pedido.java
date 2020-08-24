@@ -2,6 +2,7 @@ package br.com.fiap.entity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +18,8 @@ public class Pedido implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long idPedido;
-	private long idCliente;
+	private Cliente cliente;
+	private List<Produto> produtos;
 	private LocalDateTime dataCompra;
 	
 	public Pedido() {}
