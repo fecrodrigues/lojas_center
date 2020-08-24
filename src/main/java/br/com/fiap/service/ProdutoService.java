@@ -27,7 +27,7 @@ public class ProdutoService implements IProdutoService {
 		try {
 			return produtoRepository.findById(codigo).get();
 		} catch(NoSuchElementException e) {
-			throw new NoSuchElementException("Produto não encotrado");
+			throw new NoSuchElementException("Produto não encontrado");
 		}
 	}
 
@@ -78,7 +78,7 @@ public class ProdutoService implements IProdutoService {
 		try {
 			produtoRepository.delete(produtoRepository.findById(codigo).get());
 		} catch(NoSuchElementException e) {
-			throw new NoSuchElementException("Produto não encotrado");
+			throw new NoSuchElementException("Produto não encontrado");
 		}
 
 	}
