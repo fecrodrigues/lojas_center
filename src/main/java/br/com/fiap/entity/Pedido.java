@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -24,9 +23,10 @@ public class Pedido implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long idPedido;
+	private long codigo;
 	
-    @OneToMany(cascade= CascadeType.ALL,fetch= FetchType.LAZY, mappedBy= "pedido")
+	@ManyToOne(fetch= FetchType.LAZY)
+	@JoinColumn(name= "codigo_pedido")
 	private Cliente cliente;
 	
 	@ManyToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
@@ -38,11 +38,11 @@ public class Pedido implements Serializable{
 	private LocalDateTime dataCompra;
 	
 	
-	public long getIdPedido() {
-		return idPedido;
+	public long getCodigo() {
+		return codigo;
 	}
-	public void setIdPedido(long idPedido) {
-		this.idPedido = idPedido;
+	public void setCodigo(long codigo) {
+		this.codigo = codigo;
 	}
 	public Cliente getCliente() {
 		return cliente;

@@ -38,7 +38,7 @@ public class PedidoService {
 	
 	@Cacheable(value = "cacheblePedidoByClient" ,key = "#idCliente" )
 	public List<Pedido> findByCliente(long idCliente){
-		List<Pedido> pedidos = repository.findByIdCliente(idCliente);
+		List<Pedido> pedidos = repository.findByClienteCodigo(idCliente);
 		
 		if(pedidos == null || pedidos.isEmpty()) {
 			throw new NotFoundPedidoException(NOT_FOUND_ERROR_MSG_PEDIDO);
@@ -63,7 +63,7 @@ public class PedidoService {
 	public Pedido updatePedido(long idPedido, PedidoForm form){
 		Pedido pedido = findByPedido(idPedido);
 		
-		pedido.setIdCliente(form.getIdCliente());
+		pedido.setCliente(form.getCliente());
 		pedido.setDataCompra(form.getDataCompra());
 		
 		return findByPedido(idPedido);

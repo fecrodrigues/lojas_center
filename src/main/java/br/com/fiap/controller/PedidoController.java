@@ -40,7 +40,7 @@ public class PedidoController {
 	@PostMapping
 	public ResponseEntity<Pedido> addPedido(@RequestBody Pedido pedido, UriComponentsBuilder uriBuilder){
 		Pedido pedidoCreated = service.addPedido(pedido);
-		URI uri = uriBuilder.path("/pedidos/{idCliente}").buildAndExpand(pedidoCreated.getIdCliente()).toUri();
+		URI uri = uriBuilder.path("/pedidos/{idCliente}").buildAndExpand(pedidoCreated.getCliente().getCodigo()).toUri();
 		
 		return ResponseEntity.created(uri).body(pedidoCreated);
 	}

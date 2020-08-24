@@ -65,7 +65,7 @@ public class ClienteController {
     public ResponseEntity<Response<HttpHeaders>> adicionarCliente(@RequestBody Cliente cliente, UriComponentsBuilder builder) {
         Cliente savedCliente = clienteService.adicionarCliente(cliente);
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(builder.path("/cliente/{codigo}").buildAndExpand(savedCliente.codigo).toUri());
+        headers.setLocation(builder.path("/cliente/{codigo}").buildAndExpand(savedCliente.getCodigo()).toUri());
         return new ResponseEntity<Response<HttpHeaders>>(new Response<HttpHeaders>("Cliente adicionado", headers), HttpStatus.CREATED);
     }
 
@@ -77,7 +77,7 @@ public class ClienteController {
     })
     @PutMapping
     public ResponseEntity<Response<Cliente>> atualizarCliente(@RequestBody Cliente cliente) {
-        if(cliente.codigo != null) {
+        if(cliente.getCodigo() != null) {
             try {
                 clienteService.atualizarCliente(cliente);
                 return new ResponseEntity<Response<Cliente>>( new Response<Cliente>("Cliente atualizado", cliente), HttpStatus.OK );

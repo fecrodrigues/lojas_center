@@ -8,5 +8,5 @@ import br.com.fiap.entity.Pedido;
 
 public interface PedidoRepository extends CrudRepository<Pedido, Long> {
 	
-	public List<Pedido> findByIdCliente(long idCliente);
+	public List<Pedido> findByClienteCodigo(long idCliente);
 }

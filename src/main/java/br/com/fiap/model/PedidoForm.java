@@ -2,17 +2,19 @@ package br.com.fiap.model;
 
 import java.time.LocalDateTime;
 
+import br.com.fiap.entity.Cliente;
+
 public class PedidoForm {
 
-	private long idCliente;
+	private Cliente cliente;
 	private LocalDateTime dataCompra;
 	
 	
-	public long getIdCliente() {
-		return idCliente;
+	public Cliente getCliente() {
+		return cliente;
 	}
-	public void setIdCliente(long idCliente) {
-		this.idCliente = idCliente;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 	public LocalDateTime getDataCompra() {
 		return dataCompra;

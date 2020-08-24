@@ -63,7 +63,7 @@ public class ProdutoController {
 	public ResponseEntity<Response<HttpHeaders>> adicionarProduto(@RequestBody Produto produto, UriComponentsBuilder builder) {
 		Produto savedProduto = produtoService.adicionarProduto(produto);
                 HttpHeaders headers = new HttpHeaders();
-                headers.setLocation(builder.path("/produto/{codigo}").buildAndExpand(savedProduto.codigo).toUri());
+                headers.setLocation(builder.path("/produto/{codigo}").buildAndExpand(savedProduto.getCodigo()).toUri());
                 return new ResponseEntity<Response<HttpHeaders>>(new Response<HttpHeaders>("Produto adicionado", headers), HttpStatus.CREATED);
 	}
 
@@ -75,7 +75,7 @@ public class ProdutoController {
 	})
 	@PutMapping
 	public ResponseEntity<Response<Produto>> atualizarProduto(@RequestBody Produto produto) {
-		if(produto.codigo != null) {
+		if(produto.getCodigo() != null) {
 			try {
 				produtoService.atualizarProduto(produto);
 				return new ResponseEntity<Response<Produto>>( new Response<Produto>("Produto atualizado", produto), HttpStatus.OK );
