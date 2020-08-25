@@ -1,7 +1,7 @@
 package br.com.fiap.controller;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.*;
 
 import br.com.fiap.model.ControleEstoqueProduto;
 import br.com.fiap.model.Response;
@@ -10,11 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.fiap.entity.Produto;
 import br.com.fiap.service.IProdutoService;
+
+import javax.validation.*;
 
 @Api(tags = "Produto")
 @RestController
@@ -57,24 +62,25 @@ public class ProdutoController {
 
 	@ApiOperation("Adicionar um novo produto")
 	@ApiResponses( value = {
-			@ApiResponse(code = 201, message = "Informa que o produto foi adicionado")
+			@ApiResponse(code = 201, message = "Informa que o produto foi adicionado"),
+			@ApiResponse(code = 400, message = "Algumas ou todas as informações enviadas estão incorretas")
 	})
 	@PostMapping
-	public ResponseEntity<Response<HttpHeaders>> adicionarProduto(@RequestBody Produto produto, UriComponentsBuilder builder) {
+	public ResponseEntity<Response<HttpHeaders>> adicionarProduto(@Valid @RequestBody Produto produto, UriComponentsBuilder builder) {
 		Produto savedProduto = produtoService.adicionarProduto(produto);
-                HttpHeaders headers = new HttpHeaders();
-                headers.setLocation(builder.path("/produto/{codigo}").buildAndExpand(savedProduto.codigo).toUri());
-                return new ResponseEntity<Response<HttpHeaders>>(new Response<HttpHeaders>("Produto adicionado", headers), HttpStatus.CREATED);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setLocation(builder.path("/produto/{codigo}").buildAndExpand(savedProduto.codigo).toUri());
+		return new ResponseEntity<Response<HttpHeaders>>(new Response<HttpHeaders>("Produto adicionado", headers), HttpStatus.CREATED);
 	}
 
 	@ApiOperation("Atualizar um produto especifico de acordo com o código do produto informado")
 	@ApiResponses( value = {
 			@ApiResponse(code = 200, message = "Retorna o produto que foi atualizado"),
 			@ApiResponse(code = 404, message = "Informa que o produto não foi encontrado para atualização"),
-			@ApiResponse(code = 400, message = "Código do produto não foi informado")
+			@ApiResponse(code = 400, message = "Código do produto não foi informado ou informações enviadas estão incorretas")
 	})
 	@PutMapping
-	public ResponseEntity<Response<Produto>> atualizarProduto(@RequestBody Produto produto) {
+	public ResponseEntity<Response<Produto>> atualizarProduto(@Valid @RequestBody Produto produto) {
 		if(produto.codigo != null) {
 			try {
 				produtoService.atualizarProduto(produto);
@@ -107,10 +113,10 @@ public class ProdutoController {
 	@ApiResponses( value = {
 			@ApiResponse(code = 200, message = "Baixa no estoque foi realizada com sucesso"),
 			@ApiResponse(code = 404, message = "Produto não encontrado para dar baixa"),
-			@ApiResponse(code = 400, message = "Produto não possui estoque suficiente para dar baixa")
+			@ApiResponse(code = 400, message = "Informação passada é inválida")
 	})
 	@PatchMapping("estoque/dar-baixa")
-	public ResponseEntity<Response<Produto>> darBaixaEstoque(@RequestBody ControleEstoqueProduto controleEstoque) {
+	public ResponseEntity<Response<Produto>> darBaixaEstoque(@Valid @RequestBody ControleEstoqueProduto controleEstoque) {
 		try {
 			Produto produto = produtoService.darBaixaEstoque(controleEstoque.getCodigo(), controleEstoque.getQuantidade());
 			return new ResponseEntity<Response<Produto>>(new Response<Produto>("Baixa no estoque realizada com sucesso!", produto), HttpStatus.OK);
@@ -125,10 +131,10 @@ public class ProdutoController {
 	@ApiResponses( value = {
 			@ApiResponse(code = 200, message = "Deposito no estoque foi realizada com sucesso"),
 			@ApiResponse(code = 404, message = "Produto não encontrado para depositar"),
-			@ApiResponse(code = 400, message = "Quantidade informada é inválida")
+			@ApiResponse(code = 400, message = "Informação passada é inválida")
 	})
 	@PatchMapping("estoque/depositar")
-	public ResponseEntity<Response<Produto>> depositarEstoque(@RequestBody ControleEstoqueProduto controleEstoque) {
+	public ResponseEntity<Response<Produto>> depositarEstoque(@Valid @RequestBody ControleEstoqueProduto controleEstoque) {
 		try {
 			Produto produto = produtoService.depositarEstoque(controleEstoque.getCodigo(), controleEstoque.getQuantidade());
 			return new ResponseEntity<Response<Produto>>(new Response<Produto>("Deposito no estoque realizado com sucesso!", produto), HttpStatus.OK);
@@ -138,4 +144,5 @@ public class ProdutoController {
 			return new ResponseEntity<Response<Produto>>(new Response<Produto>(e.getMessage(), null), HttpStatus.BAD_REQUEST);
 		}
 	}
+
 } 
