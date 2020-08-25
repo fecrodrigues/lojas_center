@@ -92,7 +92,8 @@ public class ProdutoService implements IProdutoService {
 		try {
 			if(quantidade > 0) {
 				Produto produto = produtoRepository.findById(codigo).get();
-				produto.setQuantidade(produto.getQuantidade() - quantidade);
+				Integer quantidadeAtual = produto.getQuantidade();
+				produto.setQuantidade(quantidadeAtual - quantidade);
 
 				if(produto.getQuantidade() < 0) {
 					throw new Exception("Produto não possui a quantidade desejada no estoque");
@@ -118,7 +119,8 @@ public class ProdutoService implements IProdutoService {
 
 			if(quantidade > 0) {
 				Produto produto = produtoRepository.findById(codigo).get();
-				produto.setQuantidade(produto.getQuantidade() + quantidade);
+				Integer quantidadeAtual = produto.getQuantidade();
+				produto.setQuantidade(quantidadeAtual + quantidade);
 
 				produtoRepository.save(produto);
 				return produto;

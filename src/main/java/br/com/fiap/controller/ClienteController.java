@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -59,10 +60,11 @@ public class ClienteController {
 
     @ApiOperation("Adicionar um novo cliente")
     @ApiResponses( value = {
-            @ApiResponse(code = 201, message = "Informa que o cliente foi adicionado")
+            @ApiResponse(code = 201, message = "Informa que o cliente foi adicionado"),
+            @ApiResponse(code = 400, message = "Algumas ou todas as informações enviadas estão incorretas")
     })
     @PostMapping
-    public ResponseEntity<Response<HttpHeaders>> adicionarCliente(@RequestBody Cliente cliente, UriComponentsBuilder builder) {
+    public ResponseEntity<Response<HttpHeaders>> adicionarCliente(@Valid @RequestBody Cliente cliente, UriComponentsBuilder builder) {
         Cliente savedCliente = clienteService.adicionarCliente(cliente);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(builder.path("/cliente/{codigo}").buildAndExpand(savedCliente.getCodigo()).toUri());
@@ -73,10 +75,10 @@ public class ClienteController {
     @ApiResponses( value = {
             @ApiResponse(code = 200, message = "Retorna o cliente que foi atualizado"),
             @ApiResponse(code = 404, message = "Informa que o cliente não foi encontrado para atualização"),
-            @ApiResponse(code = 400, message = "Código do cliente não foi informado")
+            @ApiResponse(code = 400, message = "Código do cliente não foi informado ou alguma informação está incorreta")
     })
     @PutMapping
-    public ResponseEntity<Response<Cliente>> atualizarCliente(@RequestBody Cliente cliente) {
+    public ResponseEntity<Response<Cliente>> atualizarCliente(@Valid @RequestBody Cliente cliente) {
         if(cliente.getCodigo() != null) {
             try {
                 clienteService.atualizarCliente(cliente);
