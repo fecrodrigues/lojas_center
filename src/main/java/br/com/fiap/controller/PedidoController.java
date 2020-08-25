@@ -56,11 +56,11 @@ public class PedidoController {
 		@ApiResponse(code = 201, message = "Retorna o pedido cadastrado com sucesso")
 	})
 	@PostMapping
-	public ResponseEntity<Pedido> addPedido(@RequestBody PedidoForm form, UriComponentsBuilder uriBuilder){
+	public ResponseEntity<?> addPedido(@RequestBody PedidoForm form, UriComponentsBuilder uriBuilder){
 		Pedido pedidoCreated = service.addPedido(form);
 		URI uri = uriBuilder.path("/pedidos/{idPedido}").buildAndExpand(pedidoCreated.getCodigo()).toUri();
 		
-		return ResponseEntity.created(uri).body(pedidoCreated);
+		return ResponseEntity.ok("");
 	}
 	
 	@ApiOperation("Atualiza informações de um pedido")

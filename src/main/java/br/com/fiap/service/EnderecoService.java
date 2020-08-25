@@ -16,7 +16,7 @@ public class EnderecoService implements IEnderecoService {
     @Override
     public Endereco salvarClienteEndereco(Cliente cliente, Endereco endereco) {
         endereco.cliente = cliente;
-        if(cliente.codigo != null) endereco.codigo_cliente = cliente.codigo;
+        if(cliente.getCodigo() != null) endereco.codigo_cliente = cliente.getCodigo();
 
         return enderecoRepository.save(endereco);
     }

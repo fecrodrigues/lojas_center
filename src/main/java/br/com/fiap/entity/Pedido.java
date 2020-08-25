@@ -31,8 +31,8 @@ public class Pedido implements Serializable{
 	
 	@ManyToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
 	@JoinTable(name= "pedido_produto", joinColumns= 
-	{@JoinColumn(name= "codigo_pedido", nullable= false, updatable= false)},
-	inverseJoinColumns= {@JoinColumn(name= "codigo_produto", nullable= false, updatable= false)})
+	{@JoinColumn(name= "codigo_pedido", nullable= true, updatable= false)},
+	inverseJoinColumns= {@JoinColumn(name= "codigo_produto", nullable= true, updatable= false)})
 	private List<Produto> produtos;
 	
 	private LocalDateTime dataCompra;
@@ -40,6 +40,7 @@ public class Pedido implements Serializable{
 	public Pedido() {}
 	
 	public Pedido(Cliente cliente, List<Produto> produtos, LocalDateTime dataCompra) {
+		this.codigo = 12345;
 		this.cliente = cliente;
 		this.produtos = produtos;
 		this.dataCompra = dataCompra;

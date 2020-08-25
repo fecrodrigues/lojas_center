@@ -49,8 +49,8 @@ public class ClienteService implements IClienteService {
 
     @Override
     public Cliente atualizarCliente(Cliente cliente) {
-        System.out.println("Atualizando cliente " + cliente.codigo );
-        Optional<Cliente> clienteEncontrado = clienteRepository.findById(cliente.codigo);
+        System.out.println("Atualizando cliente " + cliente.getCodigo());
+        Optional<Cliente> clienteEncontrado = clienteRepository.findById(cliente.getCodigo());
         try {
             clienteEncontrado.get();
             enderecoService.salvarClienteEndereco(cliente, cliente.endereco);
