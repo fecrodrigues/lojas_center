@@ -83,17 +83,16 @@ ENGINE = InnoDB;
 -- Table `loja_center`.`endereco`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `loja_center`.`endereco` (
-  `codigo` INT NOT NULL AUTO_INCREMENT,
+  `codigo_cliente` INT NOT NULL,
   `cep` VARCHAR(8) NULL,
   `logradouro` VARCHAR(170) NULL,
   `cidade` VARCHAR(150) NULL,
   `estado` VARCHAR(150) NULL,
   `numero` INT NULL,
   `complemento` VARCHAR(255) NULL,
-  `codigo_cliente` INT NOT NULL,
-  PRIMARY KEY (`codigo`),
-  INDEX `fk_Endereco_Cliente1_idx` (`codigo_cliente` ASC) VISIBLE,
-  CONSTRAINT `fk_Endereco_Cliente1`
+  INDEX `fk_endereco_cliente1_idx` (`codigo_cliente` ASC) VISIBLE,
+  PRIMARY KEY (`codigo_cliente`),
+  CONSTRAINT `fk_endereco_cliente1`
     FOREIGN KEY (`codigo_cliente`)
     REFERENCES `loja_center`.`cliente` (`codigo`)
     ON DELETE NO ACTION

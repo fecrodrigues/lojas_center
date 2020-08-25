@@ -1,6 +1,7 @@
 package br.com.fiap.service;
 
 import br.com.fiap.entity.Cliente;
+import br.com.fiap.entity.Endereco;
 import br.com.fiap.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ public class ClienteService implements IClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private IEnderecoService enderecoService;
 
     @Override
     public List<Cliente> listarClientes() {
@@ -36,7 +40,11 @@ public class ClienteService implements IClienteService {
 
     @Override
     public Cliente adicionarCliente(Cliente cliente) {
-        return clienteRepository.save(cliente);
+        Endereco endereco = enderecoService.salvarClienteEndereco(cliente, cliente.endereco);
+        Cliente clienteAdd = endereco.cliente;
+        //Cliente clienteAdd = clienteRepository.save(cliente);
+
+        return clienteAdd;
     }
 
     @Override
@@ -45,6 +53,7 @@ public class ClienteService implements IClienteService {
         Optional<Cliente> clienteEncontrado = clienteRepository.findById(cliente.codigo);
         try {
             clienteEncontrado.get();
+            enderecoService.salvarClienteEndereco(cliente, cliente.endereco);
             return clienteRepository.save(cliente);
         } catch(NoSuchElementException e) {
             throw new NoSuchElementException("Cliente não encontrado para atualização");
