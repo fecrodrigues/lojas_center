@@ -56,8 +56,8 @@ public class ProdutoService implements IProdutoService {
 		evict= { @CacheEvict(value= "listaProdutosCache", allEntries= true) }
 	)
 	public Produto atualizarProduto(Produto produto) throws NoSuchElementException {
-		System.out.println("Atualizando produto " + produto.codigo );
-		Optional<Produto> produtoEncontrado = produtoRepository.findById(produto.codigo);
+		System.out.println("Atualizando produto " + produto.getCodigo() );
+		Optional<Produto> produtoEncontrado = produtoRepository.findById(produto.getCodigo());
 		try {
 			produtoEncontrado.get();
 			return produtoRepository.save(produto);
@@ -92,9 +92,10 @@ public class ProdutoService implements IProdutoService {
 		try {
 			if(quantidade > 0) {
 				Produto produto = produtoRepository.findById(codigo).get();
-				produto.quantidade -= quantidade;
+				Integer quantidadeAtual = produto.getQuantidade();
+				produto.setQuantidade(quantidadeAtual - quantidade);
 
-				if(produto.quantidade < 0) {
+				if(produto.getQuantidade() < 0) {
 					throw new Exception("Produto não possui a quantidade desejada no estoque");
 				} else {
 					produtoRepository.save(produto);
@@ -118,7 +119,8 @@ public class ProdutoService implements IProdutoService {
 
 			if(quantidade > 0) {
 				Produto produto = produtoRepository.findById(codigo).get();
-				produto.quantidade += quantidade;
+				Integer quantidadeAtual = produto.getQuantidade();
+				produto.setQuantidade(quantidadeAtual + quantidade);
 
 				produtoRepository.save(produto);
 				return produto;

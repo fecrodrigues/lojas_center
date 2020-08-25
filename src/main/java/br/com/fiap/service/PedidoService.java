@@ -1,5 +1,6 @@
 package br.com.fiap.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +11,26 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.fiap.entity.Cliente;
 import br.com.fiap.entity.Pedido;
+import br.com.fiap.entity.Produto;
 import br.com.fiap.exceptions.NotCreatedPedidoException;
 import br.com.fiap.exceptions.NotFoundPedidoException;
 import br.com.fiap.model.PedidoForm;
+import br.com.fiap.repository.ClienteRepository;
 import br.com.fiap.repository.PedidoRepository;
+import br.com.fiap.repository.ProdutoRepository;
 
 @Service
 public class PedidoService {
 	@Autowired
 	private PedidoRepository repository;
+	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private ProdutoRepository produtoRepository;
 	
 	private static final String NOT_FOUND_ERROR_MSG_PEDIDO = "Nenhum pedido não foi encontrado";
 	private static final String PEDIDO_CREATED_ERROR_MSG = "Erro ao criar o pedido. Favor tente novamente mais tarde";
@@ -38,7 +49,7 @@ public class PedidoService {
 	
 	@Cacheable(value = "cacheblePedidoByClient" ,key = "#idCliente" )
 	public List<Pedido> findByCliente(long idCliente){
-		List<Pedido> pedidos = repository.findByIdCliente(idCliente);
+		List<Pedido> pedidos = repository.findByClienteCodigo(idCliente);
 		
 		if(pedidos == null || pedidos.isEmpty()) {
 			throw new NotFoundPedidoException(NOT_FOUND_ERROR_MSG_PEDIDO);
@@ -47,9 +58,19 @@ public class PedidoService {
 		return pedidos;
 	}
 	
-	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#pedido.idPedido") })
-	public Pedido addPedido(Pedido pedido){
-		Pedido pedidoCreated = repository.save(pedido);
+	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#pedido.codigo") })
+	public Pedido addPedido(PedidoForm form){
+		List<Produto> produtos = new ArrayList<>();
+		Cliente newCliente = clienteRepository.findById(form.getIdCliente())
+				.orElse(null);
+
+		form.getProdutos().forEach(id -> {
+			produtos.add(produtoRepository.findById(id).orElse(null));
+		});
+		
+		Pedido pedidoCreated = repository.save(
+				new Pedido(newCliente, produtos, form.getDataCompra())
+		);
 		
 		if(pedidoCreated == null) {
 			throw new NotCreatedPedidoException(PEDIDO_CREATED_ERROR_MSG);
@@ -59,11 +80,13 @@ public class PedidoService {
 	}
 	
 	@Transactional
-	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#pedido.idPedido") })
+	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#pedido.codigo") })
 	public Pedido updatePedido(long idPedido, PedidoForm form){
 		Pedido pedido = findByPedido(idPedido);
+		Cliente newCliente = clienteRepository.findById(form.getIdCliente())
+				.orElse(null);
 		
-		pedido.setIdCliente(form.getIdCliente());
+		pedido.setCliente(newCliente);
 		pedido.setDataCompra(form.getDataCompra());
 		
 		return findByPedido(idPedido);

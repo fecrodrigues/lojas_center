@@ -40,7 +40,7 @@ public class ClienteService implements IClienteService {
 
     @Override
     public Cliente adicionarCliente(Cliente cliente) {
-        Endereco endereco = enderecoService.salvarClienteEndereco(cliente, cliente.endereco);
+        Endereco endereco = enderecoService.salvarClienteEndereco(cliente, cliente.getEndereco());
         Cliente clienteAdd = endereco.cliente;
         //Cliente clienteAdd = clienteRepository.save(cliente);
 
@@ -49,11 +49,11 @@ public class ClienteService implements IClienteService {
 
     @Override
     public Cliente atualizarCliente(Cliente cliente) {
-        System.out.println("Atualizando cliente " + cliente.codigo );
-        Optional<Cliente> clienteEncontrado = clienteRepository.findById(cliente.codigo);
+        System.out.println("Atualizando cliente " + cliente.getCodigo() );
+        Optional<Cliente> clienteEncontrado = clienteRepository.findById(cliente.getCodigo());
         try {
             clienteEncontrado.get();
-            enderecoService.salvarClienteEndereco(cliente, cliente.endereco);
+            enderecoService.salvarClienteEndereco(cliente, cliente.getEndereco());
             return clienteRepository.save(cliente);
         } catch(NoSuchElementException e) {
             throw new NoSuchElementException("Cliente não encontrado para atualização");

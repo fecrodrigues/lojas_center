@@ -1,6 +1,5 @@
 package br.com.fiap.controller;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.*;
 
 import br.com.fiap.model.ControleEstoqueProduto;
@@ -10,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -68,9 +64,9 @@ public class ProdutoController {
 	@PostMapping
 	public ResponseEntity<Response<HttpHeaders>> adicionarProduto(@Valid @RequestBody Produto produto, UriComponentsBuilder builder) {
 		Produto savedProduto = produtoService.adicionarProduto(produto);
-		HttpHeaders headers = new HttpHeaders();
-		headers.setLocation(builder.path("/produto/{codigo}").buildAndExpand(savedProduto.codigo).toUri());
-		return new ResponseEntity<Response<HttpHeaders>>(new Response<HttpHeaders>("Produto adicionado", headers), HttpStatus.CREATED);
+                HttpHeaders headers = new HttpHeaders();
+                headers.setLocation(builder.path("/produto/{codigo}").buildAndExpand(savedProduto.getCodigo()).toUri());
+                return new ResponseEntity<Response<HttpHeaders>>(new Response<HttpHeaders>("Produto adicionado", headers), HttpStatus.CREATED);
 	}
 
 	@ApiOperation("Atualizar um produto especifico de acordo com o código do produto informado")
@@ -81,7 +77,7 @@ public class ProdutoController {
 	})
 	@PutMapping
 	public ResponseEntity<Response<Produto>> atualizarProduto(@Valid @RequestBody Produto produto) {
-		if(produto.codigo != null) {
+		if(produto.getCodigo() != null) {
 			try {
 				produtoService.atualizarProduto(produto);
 				return new ResponseEntity<Response<Produto>>( new Response<Produto>("Produto atualizado", produto), HttpStatus.OK );
