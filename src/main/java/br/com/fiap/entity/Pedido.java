@@ -26,7 +26,7 @@ public class Pedido implements Serializable{
 	private long codigo;
 	
 	@ManyToOne(fetch= FetchType.LAZY)
-	@JoinColumn(name= "codigo_pedido")
+	@JoinColumn(name= "codigo_cliente")
 	private Cliente cliente;
 	
 	@ManyToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
@@ -36,6 +36,14 @@ public class Pedido implements Serializable{
 	private List<Produto> produtos;
 	
 	private LocalDateTime dataCompra;
+	
+	public Pedido() {}
+	
+	public Pedido(Cliente cliente, List<Produto> produtos, LocalDateTime dataCompra) {
+		this.cliente = cliente;
+		this.produtos = produtos;
+		this.dataCompra = dataCompra;
+	}
 	
 	
 	public long getCodigo() {
