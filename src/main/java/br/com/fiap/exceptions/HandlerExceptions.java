@@ -25,8 +25,8 @@ public class HandlerExceptions extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(value = NotFoundPedidoException.class)
 	public ResponseEntity<ErrorResponse> handlerNotFoundPedidoException(NotFoundPedidoException ex){
 		ErrorResponse error = new ErrorResponse();
-		error.setMessage("Não foi possivel encontrar o pedido");
-		error.setMessage(ex.getCause().getMessage());
+		error.setMessage("Erro ao encontrar o pedido");
+		error.setMessage(ex.getMessage());
 		
 		return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
 	}
