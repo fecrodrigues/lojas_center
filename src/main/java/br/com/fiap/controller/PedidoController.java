@@ -1,6 +1,5 @@
 package br.com.fiap.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.fiap.entity.Pedido;
 import br.com.fiap.model.PedidoForm;
+import br.com.fiap.model.Response;
 import br.com.fiap.service.PedidoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,8 +37,10 @@ public class PedidoController {
 		@ApiResponse(code = 404, message = "Informa que o pedido não foi encontrado")
 	})
 	@GetMapping("/{id}")
-	public ResponseEntity<Pedido> findByPedido(@PathVariable("id") Long idPedido){
-		return ResponseEntity.ok(service.findByPedido(idPedido));
+	public ResponseEntity<Response<Pedido>> findByPedido(@PathVariable("id") Long idPedido){
+		Pedido pedido = service.findByPedido(idPedido);
+		
+		return new ResponseEntity<Response<Pedido>>(new Response<Pedido>("Pedido Encontrado", pedido), HttpStatus.OK);
 	}
 	
 	@ApiOperation("Busca os pedidos relacionados a um cliente")
@@ -47,8 +49,10 @@ public class PedidoController {
 		@ApiResponse(code = 404, message = "Informa que o cliente não possui nenhum pedido efetuado")
 	})
 	@GetMapping
-	public ResponseEntity<List<Pedido>> findByCliente(long idCliente){
-		return ResponseEntity.ok(service.findByCliente(idCliente));
+	public ResponseEntity<Response<List<Pedido>>> findByCliente(long idCliente){
+		List<Pedido> pedidos = service.findByCliente(idCliente);
+		
+		return new ResponseEntity<Response<List<Pedido>>>(new Response<List<Pedido>>("Pedidos encontrados", pedidos),HttpStatus.OK);
 	}
 	
 	@ApiOperation("Adiciona um pedido novo")
@@ -56,11 +60,10 @@ public class PedidoController {
 		@ApiResponse(code = 201, message = "Retorna o pedido cadastrado com sucesso")
 	})
 	@PostMapping
-	public ResponseEntity<?> addPedido(@RequestBody PedidoForm form, UriComponentsBuilder uriBuilder){
+	public ResponseEntity<Response<Pedido>> addPedido(@RequestBody PedidoForm form, UriComponentsBuilder uriBuilder){
 		Pedido pedidoCreated = service.addPedido(form);
-		URI uri = uriBuilder.path("/pedidos/{idPedido}").buildAndExpand(pedidoCreated.getCodigo()).toUri();
 		
-		return ResponseEntity.ok("");
+		return new ResponseEntity<Response<Pedido>>(new Response<Pedido>("Produto adicionado", pedidoCreated), HttpStatus.CREATED);
 	}
 	
 	@ApiOperation("Atualiza informações de um pedido")
@@ -68,8 +71,10 @@ public class PedidoController {
 		@ApiResponse(code = 200, message = "Retorna o pedido atualizado com sucesso")
 	})
 	@PutMapping("/{id}")
-	public ResponseEntity<Pedido> updatePedido(@PathVariable("id") long idPedido, @RequestBody PedidoForm form){
-		return ResponseEntity.ok(service.updatePedido(idPedido, form));
+	public ResponseEntity<Response<Pedido>> updatePedido(@PathVariable("id") long idPedido, @RequestBody PedidoForm form){
+		Pedido pedido = service.updatePedido(idPedido, form);
+		
+		return new ResponseEntity<Response<Pedido>>(new Response<Pedido>("Pedido atualizado com sucesso", pedido),HttpStatus.OK);
 	}
 	
 	@ApiOperation("Remove o pedido informado")
@@ -77,9 +82,9 @@ public class PedidoController {
 		@ApiResponse(code = 200, message = "Retorna o pedido encontrado")
 	})
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletePedido(@PathVariable("id") long idPedido){
+	public ResponseEntity<Response<Void>> deletePedido(@PathVariable("id") long idPedido){
 		service.deletePedido(idPedido);
 		
-		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Response<Void>>(new Response<Void>("Pedido removido com sucesso", null),HttpStatus.NO_CONTENT);
 	}
 }

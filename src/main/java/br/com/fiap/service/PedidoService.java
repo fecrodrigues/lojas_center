@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.fiap.entity.Cliente;
 import br.com.fiap.entity.Pedido;
 import br.com.fiap.entity.Produto;
+import br.com.fiap.exceptions.DarBaixaException;
 import br.com.fiap.exceptions.NotCreatedPedidoException;
 import br.com.fiap.exceptions.NotFoundPedidoException;
 import br.com.fiap.model.PedidoForm;
@@ -32,13 +33,16 @@ public class PedidoService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 	
+	@Autowired
+	private ProdutoService produtoService;
+	
 	private static final String NOT_FOUND_ERROR_MSG_PEDIDO = "Nenhum pedido não foi encontrado";
 	private static final String PEDIDO_CREATED_ERROR_MSG = "Erro ao criar o pedido. Favor tente novamente mais tarde";
 	
 	@Cacheable(value = "cacheblePedidoById" ,key = "#idPedido" )
 	public Pedido findByPedido(long idPedido){
 		Pedido pedido = repository.findById(idPedido)
-				.orElseGet(null);
+				.orElse(null);
 		
 		if(pedido == null) {
 			throw new NotFoundPedidoException(NOT_FOUND_ERROR_MSG_PEDIDO);
@@ -58,14 +62,14 @@ public class PedidoService {
 		return pedidos;
 	}
 	
-	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#pedido.codigo") })
+	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#result.codigo") })
 	public Pedido addPedido(PedidoForm form){
 		List<Produto> produtos = new ArrayList<>();
 		Cliente newCliente = clienteRepository.findById(form.getIdCliente())
 				.orElse(null);
 
-		form.getProdutos().forEach(id -> {
-			produtos.add(produtoRepository.findById(id).orElse(null));
+		form.getProdutos().forEach(produtoForm -> {
+			produtos.add(produtoRepository.findById(produtoForm.getCodigo()).orElse(null));
 		});
 		
 		Pedido pedidoCreated = repository.save(
@@ -80,7 +84,7 @@ public class PedidoService {
 	}
 	
 	@Transactional
-	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#pedido.codigo") })
+	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#result.codigo") })
 	public Pedido updatePedido(long idPedido, PedidoForm form){
 		Pedido pedido = findByPedido(idPedido);
 		Cliente newCliente = clienteRepository.findById(form.getIdCliente())
@@ -94,11 +98,22 @@ public class PedidoService {
 	
 	@Caching(
 			evict= { 
-				@CacheEvict(value= "cacheblePedidoById", key= "#idPedido"),
-				@CacheEvict(value= "cacheblePedido", key= "#idCliente")
+				@CacheEvict(value= "cacheblePedidoById", key= "#idCliente"),
+				@CacheEvict(value= "cacheblePedido", key= "#idPedido")
 			}
 		)
 	public void deletePedido(long idPedido){
+		Pedido pedido = repository.findById(idPedido).get();
+		long idCliente = pedido.getCliente().getCodigo();
+		
+		pedido.getProdutos().forEach(produto ->{
+			try {
+				produtoService.darBaixaEstoque(produto.getCodigo(), produto.getQuantidade());
+			} catch (Exception e) {
+				throw new DarBaixaException("Erro ao dar baixa nos produtos:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
+			}
+		});
+		
 		repository.deleteById(idPedido);
 	}
 }

@@ -1,5 +1,6 @@
 package br.com.fiap.exceptions;
 
+import br.com.fiap.model.ErrorResponse;
 import br.com.fiap.model.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,13 +23,21 @@ import java.util.stream.Collectors;
 public class HandlerExceptions extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(value = NotFoundPedidoException.class)
-	public ResponseEntity<?> handlerNotFoundPedidoException(NotFoundPedidoException ex){
-		return new ResponseEntity<String>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
+	public ResponseEntity<ErrorResponse> handlerNotFoundPedidoException(NotFoundPedidoException ex){
+		ErrorResponse error = new ErrorResponse();
+		error.setMessage("Não foi possivel encontrar o pedido");
+		error.setMessage(ex.getCause().getMessage());
+		
+		return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
 	}
 	
 	@ExceptionHandler(value = NotCreatedPedidoException.class)
 	public ResponseEntity<?> handlerNotCreatedPedidoException(NotCreatedPedidoException ex){
-		return new ResponseEntity<String>(ex.getLocalizedMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		ErrorResponse error = new ErrorResponse();
+		error.setMessage("Error ao criar pedido");
+		error.setMessage(ex.getCause().getMessage());
+		
+		return new ResponseEntity<ErrorResponse>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@Override
