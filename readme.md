@@ -16,7 +16,13 @@ Foi criada uma aplicação Java contendo APIs para uma loja de e-commerce chamad
 
 Exemplo de utilização:
 
+http://localhost:8080/lojas-center/swagger-ui/
 
+A documentação completa da API está disponível no link em JSON:
+
+http://localhost:8080/lojas-center/v2/api-docs
+
+Você pode importá-la no seu software preferido... Ex. Postman ;) 
 
 
 
