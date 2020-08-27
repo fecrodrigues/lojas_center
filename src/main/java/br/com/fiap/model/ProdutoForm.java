@@ -1,9 +1,20 @@
 package br.com.fiap.model;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+
+import io.swagger.annotations.ApiModelProperty;
+
 public class ProdutoForm {
 
-	private long codigo;
-	private int quantidade;
+	@NotNull(message = "Codigo do produto é obrigatório")
+	@ApiModelProperty(example = "1")
+	private Long codigo;
+	
+	@NotNull(message = "Quantidade é obrigatória")
+	@PositiveOrZero(message = "Quantidade não pode ser negativa")
+	@ApiModelProperty(example = "10")
+	private Integer quantidade;
 	
 	
 	public long getCodigo() {

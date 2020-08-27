@@ -3,6 +3,7 @@ package br.com.fiap.entity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -25,21 +26,21 @@ public class Pedido implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long codigo;
 	
-	@ManyToOne(fetch= FetchType.LAZY)
+	@ManyToOne(fetch= FetchType.EAGER)
 	@JoinColumn(name= "codigo_cliente")
 	private Cliente cliente;
 	
-	@ManyToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL)
+	@ManyToMany(fetch= FetchType.EAGER, cascade= CascadeType.ALL)
 	@JoinTable(name= "pedido_produto", joinColumns= 
 	{@JoinColumn(name= "codigo_pedido", nullable= true, updatable= false)},
 	inverseJoinColumns= {@JoinColumn(name= "codigo_produto", nullable= true, updatable= false)})
-	private List<Produto> produtos;
+	private Set<Produto> produtos;
 	
 	private LocalDateTime dataCompra;
 	
 	public Pedido() {}
 	
-	public Pedido(Cliente cliente, List<Produto> produtos, LocalDateTime dataCompra) {
+	public Pedido(Cliente cliente, Set<Produto> produtos, LocalDateTime dataCompra) {
 		this.codigo = 12345;
 		this.cliente = cliente;
 		this.produtos = produtos;
@@ -59,10 +60,10 @@ public class Pedido implements Serializable{
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
-	public List<Produto> getProdutos() {
+	public Set<Produto> getProdutos() {
 		return produtos;
 	}
-	public void setProdutos(List<Produto> produtos) {
+	public void setProdutos(Set<Produto> produtos) {
 		this.produtos = produtos;
 	}
 	public LocalDateTime getDataCompra() {

@@ -59,7 +59,7 @@ public class Cliente implements Serializable {
     private String email;
 
     @JsonIgnore
-    @OneToMany(cascade= CascadeType.ALL,fetch= FetchType.LAZY, mappedBy= "cliente")
+    @OneToMany(cascade= CascadeType.ALL, fetch = FetchType.LAZY, mappedBy= "cliente")
     private List<Pedido> pedidos;
 
     @NotNull(message = "Endereco é obrigatório")

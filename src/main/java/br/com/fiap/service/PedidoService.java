@@ -1,7 +1,8 @@
 package br.com.fiap.service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -68,7 +69,7 @@ public class PedidoService implements IPedidoService {
 	@Override
 	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#result.codigo") })
 	public Pedido addPedido(PedidoForm form){
-		List<Produto> produtos = new ArrayList<>();
+		Set<Produto> produtos = new HashSet<>();
 		Cliente newCliente = clienteRepository.findById(form.getIdCliente())
 				.orElse(null);
 
@@ -84,13 +85,13 @@ public class PedidoService implements IPedidoService {
 			throw new NotCreatedPedidoException(PEDIDO_CREATED_ERROR_MSG+":"+form);
 		}
 		
-		pedidoCreated.getProdutos().forEach(produto ->{
-			try {
-				produtoService.depositarEstoque(produto.getCodigo(), produto.getQuantidade());
-			} catch (Exception e) {
-				throw new AtualizaEstoqueException("Erro ao produtos no estoque:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
-			}
-		});
+//		pedidoCreated.getProdutos().forEach(produto ->{
+//			try {
+//				produtoService.depositarEstoque(produto.getCodigo(), produto.getQuantidade());
+//			} catch (Exception e) {
+//				throw new AtualizaEstoqueException("Erro ao produtos no estoque:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
+//			}
+//		});
 		
 		return pedidoCreated;
 	}
@@ -99,9 +100,17 @@ public class PedidoService implements IPedidoService {
 	@Transactional
 	@Caching(put= { @CachePut(value= "cacheblePedido", key= "#result.codigo") })
 	public Pedido updatePedido(long idPedido, PedidoForm form){
+		Set<Produto> produtos = new HashSet<>();
 		Pedido pedido = findByPedido(idPedido);
+		
 		Cliente newCliente = clienteRepository.findById(form.getIdCliente())
 				.orElse(null);
+		
+		form.getProdutos().forEach(produtoForm ->{
+			Produto produto = produtoService.consultarProduto(produtoForm.getCodigo());
+			produto.setQuantidade(produtoForm.getQuantidade());
+			produtos.add(produto);
+		});
 		
 		pedido.setCliente(newCliente);
 		pedido.setDataCompra(form.getDataCompra());
@@ -120,13 +129,13 @@ public class PedidoService implements IPedidoService {
 		Pedido pedido = repository.findById(idPedido).get();
 		long idCliente = pedido.getCliente().getCodigo();
 		
-		pedido.getProdutos().forEach(produto ->{
-			try {
-				produtoService.darBaixaEstoque(produto.getCodigo(), produto.getQuantidade());
-			} catch (Exception e) {
-				throw new AtualizaEstoqueException("Erro ao dar baixa nos produtos:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
-			}
-		});
+//		pedido.getProdutos().forEach(produto ->{
+//			try {
+//				produtoService.darBaixaEstoque(produto.getCodigo(), produto.getQuantidade());
+//			} catch (Exception e) {
+//				throw new AtualizaEstoqueException("Erro ao dar baixa nos produtos:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
+//			}
+//		});
 		
 		repository.deleteById(idPedido);
 	}

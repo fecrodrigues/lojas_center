@@ -26,7 +26,7 @@ public class HandlerExceptions extends ResponseEntityExceptionHandler {
 	public ResponseEntity<ErrorResponse> handlerNotFoundPedidoException(NotFoundPedidoException ex){
 		ErrorResponse error = new ErrorResponse();
 		error.setMessage("Erro ao encontrar o pedido");
-		error.setMessage(ex.getMessage());
+		error.setDebugMessage(ex.getMessage());
 		
 		return new ResponseEntity<ErrorResponse>(error, HttpStatus.NOT_FOUND);
 	}
@@ -35,7 +35,7 @@ public class HandlerExceptions extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> handlerNotCreatedPedidoException(NotCreatedPedidoException ex){
 		ErrorResponse error = new ErrorResponse();
 		error.setMessage("Error ao criar pedido");
-		error.setMessage(ex.getCause().getMessage());
+		error.setDebugMessage(ex.getCause().getMessage());
 		
 		return new ResponseEntity<ErrorResponse>(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
