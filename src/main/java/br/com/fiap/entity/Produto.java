@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -42,6 +43,9 @@ public class Produto implements Serializable {
 	@Positive(message = "Valor não pode ser negativo ou zero")
 	@ApiModelProperty(example = "10.50")
 	private BigDecimal valor;
+	
+	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "produtos")
+	private List<Pedido> pedidos;
 	
 	public Produto(long id, String nome) {
 		super();
@@ -82,6 +86,14 @@ public class Produto implements Serializable {
 
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 	
 }
