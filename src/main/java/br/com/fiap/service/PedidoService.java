@@ -121,12 +121,13 @@ public class PedidoService implements IPedidoService {
 	@Override
 	@Caching(
 			evict= { 
-				@CacheEvict(value= "cacheblePedidoById", key= "#idCliente"),
+				@CacheEvict(value= "cacheblePedidoByClient", allEntries = true),
+				@CacheEvict(value= "cacheblePedidoById", key= "#idPedido"),
 				@CacheEvict(value= "cacheblePedido", key= "#idPedido")
 			}
 		)
 	public void deletePedido(long idPedido){
-		Pedido pedido = repository.findById(idPedido).get();
+		Pedido pedido = findByPedido(idPedido);
 		long idCliente = pedido.getCliente().getCodigo();
 		
 //		pedido.getProdutos().forEach(produto ->{
