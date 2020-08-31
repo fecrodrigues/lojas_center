@@ -19,8 +19,11 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "produto")
+@JsonIgnoreProperties
 public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -44,8 +47,8 @@ public class Produto implements Serializable {
 	@ApiModelProperty(example = "10.50")
 	private BigDecimal valor;
 	
-	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "produtos")
-	private List<Pedido> pedidos;
+//	@ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "produtos")
+//	private List<Pedido> pedidos;
 	
 	public Produto(long id, String nome) {
 		super();
@@ -88,12 +91,12 @@ public class Produto implements Serializable {
 		this.valor = valor;
 	}
 
-	public List<Pedido> getPedidos() {
-		return pedidos;
-	}
+//	public List<Pedido> getPedidos() {
+//		return pedidos;
+//	}
 
-	public void setPedidos(List<Pedido> pedidos) {
-		this.pedidos = pedidos;
-	}
+//	public void setPedidos(List<Pedido> pedidos) {
+//		this.pedidos = pedidos;
+//	}
 	
 }

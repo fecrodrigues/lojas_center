@@ -87,9 +87,9 @@ public class PedidoService implements IPedidoService {
 		
 //		pedidoCreated.getProdutos().forEach(produto ->{
 //			try {
-//				produtoService.depositarEstoque(produto.getCodigo(), produto.getQuantidade());
+//				produtoService.darBaixaEstoque(produto.getCodigo(), produto.getQuantidade());
 //			} catch (Exception e) {
-//				throw new AtualizaEstoqueException("Erro ao produtos no estoque:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
+//				throw new AtualizaEstoqueException("Erro ao dar baixa nos produtos:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
 //			}
 //		});
 		
@@ -128,13 +128,12 @@ public class PedidoService implements IPedidoService {
 		)
 	public void deletePedido(long idPedido){
 		Pedido pedido = findByPedido(idPedido);
-		long idCliente = pedido.getCliente().getCodigo();
 		
 //		pedido.getProdutos().forEach(produto ->{
 //			try {
-//				produtoService.darBaixaEstoque(produto.getCodigo(), produto.getQuantidade());
+//				produtoService.depositarEstoque(produto.getCodigo(), produto.getQuantidade());
 //			} catch (Exception e) {
-//				throw new AtualizaEstoqueException("Erro ao dar baixa nos produtos:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
+//				throw new AtualizaEstoqueException("Erro ao produtos no estoque:{nome:"+produto.getNome()+",quantidade:"+produto.getQuantidade());
 //			}
 //		});
 		
